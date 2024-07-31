@@ -3,7 +3,8 @@ spring:
     name: dify-demo
 
 dify:
-  url: http://localhost/v1/chat-messages
+  url: https://dify.yourcompay.com/v1/chat-messages
+  baseUrl: https://dify.yourcompay.com/v1
+  apiKey: app-y67TVu9T8tZ6r2UUMBJ6wm8R
   key:
     test: app-y67TVu9T8tZ6r2UUMBJ6wm8R
-

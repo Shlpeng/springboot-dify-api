@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.pitayafruit","com.longbridge.dify"})
 public class DifyDemoApplication {
 
     public static void main(String[] args) {

@@ -1,12 +1,16 @@
 package com.pitayafruit.service;
 
 import com.alibaba.fastjson2.JSON;
+import com.longbridge.dify.client.DifyClient;
+import com.longbridge.dify.entity.DifyRequest;
+import com.longbridge.dify.entity.DifyResponse;
 import com.pitayafruit.req.DifyRequestBody;
 import com.pitayafruit.resp.BlockResponse;
 import com.pitayafruit.resp.StreamResponse;
 import java.util.HashMap;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
-
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +32,9 @@ public class DifyService {
 
     private final WebClient webClient;
 
+    @Autowired
+    private DifyClient difyClient;
+
     /**
      * 流式调用dify.
      *
@@ -37,7 +43,11 @@ public class DifyService {
      * @param apiKey apiKey 通过 apiKey 获取权限并区分不同的 dify 应用
      * @return Flux 响应流
      */
-    public Flux<StreamResponse> streamingMessage(String query, Long userId, String apiKey) {
+    public Flux<DifyResponse> streamingMessage(String query, Long userId, String apiKey) {
+        return difyClient.sendMessageStreaming(DifyRequest.builder().query(query).inputs(new HashMap<>()).response_mode("streaming").conversation_id("").user(String.valueOf(userId)).build());
+    }
+
+    public Flux<StreamResponse> streamingMessageDeprecated(String query, Long userId, String apiKey) {
         //1.设置请求体
         DifyRequestBody body = new DifyRequestBody();
         body.setInputs(new HashMap<>());
@@ -66,7 +76,11 @@ public class DifyService {
      * @param apiKey apiKey 通过 apiKey 获取权限并区分不同的 dify 应用
      * @return BlockResponse
      */
-    public BlockResponse blockingMessage(String query, Long userId, String apiKey) {
+    public Object blockingMessage(String query, Long userId, String apiKey) {
+        return difyClient.sendMessageBlocking(DifyRequest.builder().query(query).inputs(new HashMap<>()).response_mode("blocking").conversation_id("").user(String.valueOf(userId)).build());
+    }
+
+    public BlockResponse blockingMessageDeprecated(String query, Long userId, String apiKey) {
         //1.设置请求体
         DifyRequestBody body = new DifyRequestBody();
         body.setInputs(new HashMap<>());
